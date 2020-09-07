@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--material icons-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Skin Viewer -->
+    <script src="/static/js/skinview3d.js"></script>
+    <script>
+        function createSkinViewer(player) {
+            let skin = "/skin/" + player
+            let element = "skin_container_" + player
+            let skinViewer = new skinview3d.SkinViewer(document.getElementById(element), {
+                width: 250,
+                height: 250,
+                skin: skin
+            });
+
+            // Control objects with your mouse!
+            let control = skinview3d.createOrbitControls(skinViewer);
+            control.enableRotate = false;
+            control.enableZoom = false;
+            control.enablePan = false;
+
+            // Add an animation
+            //let walk = skinViewer.animations.add(skinview3d.WalkingAnimation);
+
+        }
+    </script>
+
+    <!-- Autoreload-->
+    <script>
+        let reload = true
+        setInterval(function () {
+
+            if (reload) {
+                console.log("reloading..."); document.location.href = "/"
+            }
+
+        }, 60000 * 5);
+
+        function toggleRefresh() {
+            if(reload){
+                reload = false;
+                document.getElementById("refresh").classList.add("btn-danger")
+            } else {
+                reload = true;
+                document.getElementById("refresh").classList.remove("btn-danger")
+            }
+        }
+
+    </script>
+
+
+
+    <title>MyMcMonitor</title>
+</head>
+
+<body style="background-image: url('/static/images/2020-08-24_19.09.11.png');">
+    <div class="container">
+        <div class="container">
+            <div class="jumbotron text-center">
+                <button class="btn float-sm-right" id="refresh" onclick="toggleRefresh()" data-toggle="tooltip" data-placement="top" title="toogle automatic refresh"><span class="material-icons">
+                    refresh
+                    </span>
+                </button>
+                <h1 class="display-4"> Pfalles Minecraft Server</h1>
+                <p class="lead "> {{ description }} </p>
+
+
+                <div class="row text-center">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm">Version:</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm">{{ version }}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm">Ping:</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm">{{ ping }} ms</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-sm">Players Online:</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm">{{ players|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                {% for player in players %}
+                <div class="col-sm-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            {{player}}
+                        </div>
+                        <div class="card-body">
+                            <div id="skin_container_{{player}}"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        createSkinViewer("{{player}}")
+                    </script>
+                    <br>
+                </div>
+
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
